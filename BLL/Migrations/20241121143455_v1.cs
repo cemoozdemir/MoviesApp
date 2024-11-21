@@ -27,6 +27,19 @@ namespace BLL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Genres",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Genres", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
@@ -84,22 +97,27 @@ namespace BLL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Genres",
+                name: "GenresMovie",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    MovieId = table.Column<int>(type: "int", nullable: true)
+                    GenresId = table.Column<int>(type: "int", nullable: false),
+                    MoviesId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Genres", x => x.Id);
+                    table.PrimaryKey("PK_GenresMovie", x => new { x.GenresId, x.MoviesId });
                     table.ForeignKey(
-                        name: "FK_Genres_Movies_MovieId",
-                        column: x => x.MovieId,
+                        name: "FK_GenresMovie_Genres_GenresId",
+                        column: x => x.GenresId,
+                        principalTable: "Genres",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GenresMovie_Movies_MoviesId",
+                        column: x => x.MoviesId,
                         principalTable: "Movies",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -129,9 +147,9 @@ namespace BLL.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Genres_MovieId",
-                table: "Genres",
-                column: "MovieId");
+                name: "IX_GenresMovie_MoviesId",
+                table: "GenresMovie",
+                column: "MoviesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MovieGenres_GenreId",
@@ -158,6 +176,9 @@ namespace BLL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "GenresMovie");
+
+            migrationBuilder.DropTable(
                 name: "MovieGenres");
 
             migrationBuilder.DropTable(
@@ -167,10 +188,10 @@ namespace BLL.Migrations
                 name: "Genres");
 
             migrationBuilder.DropTable(
-                name: "Roles");
+                name: "Movies");
 
             migrationBuilder.DropTable(
-                name: "Movies");
+                name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "Directors");

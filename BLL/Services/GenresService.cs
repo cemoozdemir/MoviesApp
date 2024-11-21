@@ -18,6 +18,11 @@ namespace BLL.Services
         {
         }
 
+        public IQueryable<BLL.Models.GenresModel> Query()
+        {
+            return _db.Genres.OrderBy(g => g.Name).Select(g => new BLL.Models.GenresModel() { Record = g });
+        }
+
         public ServiceBase Create(Genres record)
         {
             if (_db.Genres.Any(g => g.Name.ToUpper() == record.Name.ToUpper().Trim()))
@@ -26,6 +31,18 @@ namespace BLL.Services
             _db.Genres.Add(record);
             _db.SaveChanges();
             return Success("Genre created.");
+        }
+        public ServiceBase Update(Genres record)
+        {
+            if (_db.Genres.Any(g => g.Name.ToUpper() == record.Name.ToUpper().Trim() && g.Id != record.Id))
+                return Error("Genre already exists.");
+            var entity = _db.Genres.SingleOrDefault(g => g.Id == record.Id);
+            if (entity == null)
+                return Error("Genre not found.");
+            entity.Name = record.Name?.Trim();
+            _db.Genres.Update(entity);
+            _db.SaveChanges();
+            return Success("Genre updated.");
         }
 
         public ServiceBase Delete(int id)
@@ -38,24 +55,6 @@ namespace BLL.Services
             _db.Genres.Remove(entity);
             _db.SaveChanges();
             return Success("Genre deleted.");
-        }
-
-        public IQueryable<BLL.Models.GenresModel> Query()
-        {
-            return _db.Genres.OrderBy(g => g.Name).Select(g => new BLL.Models.GenresModel() { Record = g });
-        }
-
-        public ServiceBase Update(Genres record)
-        {
-            if (_db.Genres.Any(g => g.Name.ToUpper() == record.Name.ToUpper().Trim() && g.Id != record.Id))
-                return Error("Genre already exists.");
-            var entity = _db.Genres.SingleOrDefault(g => g.Id == record.Id);
-            if (entity == null)
-                return Error("Genre not found.");
-            entity.Name = record.Name?.Trim();
-            _db.Genres.Update(entity);
-            _db.SaveChanges();
-            return Success("Genre updated.");
         }
     }
 }

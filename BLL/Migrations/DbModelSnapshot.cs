@@ -17,7 +17,7 @@ namespace BLL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "8.0.11")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -48,7 +48,7 @@ namespace BLL.Migrations
                     b.ToTable("Directors");
                 });
 
-            modelBuilder.Entity("BLL.DAL.Genre", b =>
+            modelBuilder.Entity("BLL.DAL.Genres", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -56,17 +56,12 @@ namespace BLL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("MovieId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MovieId");
 
                     b.ToTable("Genres");
                 });
@@ -172,11 +167,19 @@ namespace BLL.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("BLL.DAL.Genre", b =>
+            modelBuilder.Entity("GenresMovie", b =>
                 {
-                    b.HasOne("BLL.DAL.Movie", null)
-                        .WithMany("Genres")
-                        .HasForeignKey("MovieId");
+                    b.Property<int>("GenresId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MoviesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GenresId", "MoviesId");
+
+                    b.HasIndex("MoviesId");
+
+                    b.ToTable("GenresMovie");
                 });
 
             modelBuilder.Entity("BLL.DAL.Movie", b =>
@@ -192,7 +195,7 @@ namespace BLL.Migrations
 
             modelBuilder.Entity("BLL.DAL.MovieGenre", b =>
                 {
-                    b.HasOne("BLL.DAL.Genre", "Genre")
+                    b.HasOne("BLL.DAL.Genres", "Genre")
                         .WithMany()
                         .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -220,14 +223,24 @@ namespace BLL.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("GenresMovie", b =>
+                {
+                    b.HasOne("BLL.DAL.Genres", null)
+                        .WithMany()
+                        .HasForeignKey("GenresId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BLL.DAL.Movie", null)
+                        .WithMany()
+                        .HasForeignKey("MoviesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("BLL.DAL.Director", b =>
                 {
                     b.Navigation("Movies");
-                });
-
-            modelBuilder.Entity("BLL.DAL.Movie", b =>
-                {
-                    b.Navigation("Genres");
                 });
 
             modelBuilder.Entity("BLL.DAL.Role", b =>

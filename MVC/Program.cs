@@ -12,6 +12,8 @@ builder.Services.AddControllersWithViews();
 var connectionString = "server=(localdb)\\mssqllocaldb;database=MoviesAppDB;trusted_connection=true;";
 builder.Services.AddDbContext<Db>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<IGenresService, GenresService>();
+builder.Services.AddScoped<IDirectorService, DirectorService>();
+builder.Services.AddScoped<IMovieService, MovieService>();
 
 var app = builder.Build();
 
