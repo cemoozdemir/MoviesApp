@@ -7,18 +7,19 @@ namespace BLL.Services
 {
     public interface IGenresService
     {
-        public IQueryable<BLL.Models.GenresModel> Query();
+        public IQueryable<GenresModel> Query();
         public ServiceBase Create(Genres record);
         public ServiceBase Update(Genres record);
         public ServiceBase Delete(int id);
     }
+
     public class GenresService : ServiceBase, IGenresService
     {
         public GenresService(Db db) : base(db)
         {
         }
 
-        public IQueryable<BLL.Models.GenresModel> Query()
+        public IQueryable<GenresModel> Query()
         {
             return _db.Genres.OrderBy(g => g.Name).Select(g => new BLL.Models.GenresModel() { Record = g });
         }

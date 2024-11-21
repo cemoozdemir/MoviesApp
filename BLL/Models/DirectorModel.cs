@@ -1,23 +1,17 @@
-﻿using BLL.DAL;
+﻿using System.IO;
+using BLL.DAL;
 
 namespace BLL.Models
 {
     public class DirectorModel
     {
-        // The Record property encapsulates the existing properties
-        public Director Record => new Director
-        {
-            Id = Id,
-            Name = Name,
-            Surname = Surname,
-            IsRetired = IsRetired
-        };
+        public Director Record { get; set; }
 
-        // Existing properties
-        public int Id { get; set; }
-        public string FullName => $"{Name} {Surname}";
-        public string Name { get; set; }
-        public string Surname { get; set; }
-        public bool IsRetired { get; set; }
+        public string Name => Record.Name;
+        public string Surname => Record.Surname;
+        public string IsRetired => Record.IsRetired ? "Yes" : "No";
+        public string Movies => string.Join("<br>", Record.Movies.Select(m => m.Name));
+
+        public string Developer { get; set; }
     }
 }

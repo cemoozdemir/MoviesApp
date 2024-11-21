@@ -11,14 +11,17 @@ namespace BLL.DAL
         [Required]
         [StringLength(50)]
         public string Name { get; set; }
-
+        
+        [Required]
         public DateTime? ReleaseDate { get; set; }
-
+        
+        [Required]
         public decimal TotalRevenue { get; set; }
-
+        
+        [Required]
         public int DirectorId { get; set; }
 
-        // Navigation Property for Director
+        //ForeignKey
         public Director Director { get; set; }
 
         // Navigation Property for MovieGenre (Many-to-Many with Genre)

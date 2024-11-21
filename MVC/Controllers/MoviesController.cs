@@ -10,122 +10,126 @@ using BLL.Services.Bases;
 
 namespace MVC.Controllers
 {
-    public class DirectorsController : MvcController
+    public class MoviesController : MvcController
     {
         // Service injections:
+        private readonly IService<Movie, MovieModel> _movieService;
         private readonly IService<Director, DirectorModel> _directorService;
 
         /* Can be uncommented and used for many to many relationships. ManyToManyRecord may be replaced with the related entiy name in the controller and views. */
         //private readonly IManyToManyRecordService _ManyToManyRecordService;
 
-        public DirectorsController(
-            IService<Director, DirectorModel> directorService
+        public MoviesController(
+            IService<Movie, MovieModel> movieService
+            , IService<Director, DirectorModel> directorService
 
             /* Can be uncommented and used for many to many relationships. ManyToManyRecord may be replaced with the related entiy name in the controller and views. */
             //, IManyToManyRecordService ManyToManyRecordService
         )
         {
+            _movieService = movieService;
             _directorService = directorService;
 
             /* Can be uncommented and used for many to many relationships. ManyToManyRecord may be replaced with the related entiy name in the controller and views. */
             //_ManyToManyRecordService = ManyToManyRecordService;
         }
 
-        // GET: Directors
+        // GET: Movies
         public IActionResult Index()
         {
             // Get collection service logic:
-            var list = _directorService.Query().ToList();
+            var list = _movieService.Query().ToList();
             return View(list);
         }
 
-        // GET: Directors/Details/5
+        // GET: Movies/Details/5
         public IActionResult Details(int id)
         {
             // Get item service logic:
-            var item = _directorService.Query().SingleOrDefault(q => q.Record.Id == id);
+            var item = _movieService.Query().SingleOrDefault(q => q.Record.Id == id);
             return View(item);
         }
 
         protected void SetViewData()
         {
             // Related items service logic to set ViewData (Record.Id and Name parameters may need to be changed in the SelectList constructor according to the model):
+            ViewData["DirectorId"] = new SelectList(_directorService.Query().ToList(), "Record.Id", "Name");
             
             /* Can be uncommented and used for many to many relationships. ManyToManyRecord may be replaced with the related entiy name in the controller and views. */
             //ViewBag.ManyToManyRecordIds = new MultiSelectList(_ManyToManyRecordService.Query().ToList(), "Record.Id", "Name");
         }
 
-        // GET: Directors/Create
+        // GET: Movies/Create
         public IActionResult Create()
         {
             SetViewData();
             return View();
         }
 
-        // POST: Directors/Create
+        // POST: Movies/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(DirectorModel director)
+        public IActionResult Create(MovieModel movie)
         {
             if (ModelState.IsValid)
             {
                 // Insert item service logic:
-                var result = _directorService.Create(director.Record);
+                var result = _movieService.Create(movie.Record);
                 if (result.IsSuccessful)
                 {
                     TempData["Message"] = result.Message;
-                    return RedirectToAction(nameof(Details), new { id = director.Record.Id });
+                    return RedirectToAction(nameof(Details), new { id = movie.Record.Id });
                 }
                 ModelState.AddModelError("", result.Message);
             }
             SetViewData();
-            return View(director);
+            return View(movie);
         }
 
-        // GET: Directors/Edit/5
+        // GET: Movies/Edit/5
         public IActionResult Edit(int id)
         {
             // Get item to edit service logic:
-            var item = _directorService.Query().SingleOrDefault(q => q.Record.Id == id);
+            var item = _movieService.Query().SingleOrDefault(q => q.Record.Id == id);
             SetViewData();
             return View(item);
         }
 
-        // POST: Directors/Edit
+        // POST: Movies/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(DirectorModel director)
+        public IActionResult Edit(MovieModel movie)
         {
             if (ModelState.IsValid)
             {
                 // Update item service logic:
-                var result = _directorService.Update(director.Record);
+                var result = _movieService.Update(movie.Record);
                 if (result.IsSuccessful)
                 {
                     TempData["Message"] = result.Message;
-                    return RedirectToAction(nameof(Details), new { id = director.Record.Id });
+                    return RedirectToAction(nameof(Details), new { id = movie.Record.Id });
                 }
                 ModelState.AddModelError("", result.Message);
             }
             SetViewData();
-            return View(director);
+            return View(movie);
         }
 
-        // GET: Directors/Delete/5
+        // GET: Movies/Delete/5
         public IActionResult Delete(int id)
         {
             // Get item to delete service logic:
-            var item = _directorService.Query().SingleOrDefault(q => q.Record.Id == id);
+            var item = _movieService.Query().SingleOrDefault(q => q.Record.Id == id);
             return View(item);
         }
 
-        // POST: Directors/Delete
+        // POST: Movies/Delete
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
             // Delete item service logic:
-            var result = _directorService.Delete(id);
+            var result = _movieService.Delete(id);
             TempData["Message"] = result.Message;
             return RedirectToAction(nameof(Index));
         }

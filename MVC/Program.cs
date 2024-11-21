@@ -1,5 +1,7 @@
 using BLL.DAL;
+using BLL.Models;
 using BLL.Services;
+using BLL.Services.Bases;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,8 +14,9 @@ builder.Services.AddControllersWithViews();
 var connectionString = "server=(localdb)\\mssqllocaldb;database=MoviesAppDB;trusted_connection=true;";
 builder.Services.AddDbContext<Db>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<IGenresService, GenresService>();
-builder.Services.AddScoped<IDirectorService, DirectorService>();
-builder.Services.AddScoped<IMovieService, MovieService>();
+builder.Services.AddScoped<IService<Movie, MovieModel>, MovieService>();
+builder.Services.AddScoped<IService<Director, DirectorModel>, DirectorService>();
+
 
 var app = builder.Build();
 

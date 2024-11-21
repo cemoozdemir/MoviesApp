@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BLL.DAL
 {
@@ -9,14 +10,11 @@ namespace BLL.DAL
         [Required]
         [StringLength(50)]
         public string Name { get; set; }
-
         [Required]
         [StringLength(50)]
         public string Surname { get; set; }
-
         public bool IsRetired { get; set; }
-
-        // Navigation Property for Movies directed by this Director
-        public List<Movie> Movies { get; set; } = new List<Movie>();
+        [InverseProperty("Director")]
+        public virtual ICollection<Movie> Movies{ get; set; } = new List<Movie>();
     }
 }

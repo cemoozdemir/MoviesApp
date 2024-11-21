@@ -4,23 +4,17 @@ namespace BLL.Models
 {
     public class MovieModel
     {
-        // The Record property encapsulates the existing properties
-        public Movie Record => new Movie
-        {
-            Id = Id,
-            Name = Name,
-            ReleaseDate = ReleaseDate,
-            TotalRevenue = TotalRevenue,
-            DirectorId = DirectorId
-        };
+        public Movie Record { get; set; }
 
-        // Existing properties
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public DateTime? ReleaseDate { get; set; }
-        public decimal TotalRevenue { get; set; }
-        public int DirectorId { get; set; }
-        public string DirectorName { get; set; }
+        public string Name => Record.Name;
+
+        public string ReleaseDate => Record.ReleaseDate.HasValue ? Record.ReleaseDate.Value.ToString("MM/dd/yyyy") : string.Empty;
+
+        public string TotalRevenue => Record.TotalRevenue.ToString("C2");
+
+        public string Director => $"{Record.Director?.Name} {Record.Director?.Surname}";
+
+        public string MovieGenres => string.Join("<br>", Record.Genres?.Select(g => g.Movies));
     }
 }
  
