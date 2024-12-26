@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.ComponentModel.DataAnnotations;
+using System.IO;
 using BLL.DAL;
 
 namespace BLL.Models
@@ -7,11 +8,16 @@ namespace BLL.Models
     {
         public Director Record { get; set; }
 
+        [Display(Name = "Director Name")]
         public string Name => Record.Name;
-        public string Surname => Record.Surname;
-        public string IsRetired => Record.IsRetired ? "Yes" : "No";
-        public string Movies => string.Join("<br>", Record.Movies.Select(m => m.Name));
 
-        public string Developer { get; set; }
+        [Display(Name = "Director Surname")]
+        public string Surname => Record.Surname;
+
+        [Display(Name = "Retirement Status")]
+        public string IsRetired => Record.IsRetired ? "Yes" : "No";
+
+        [Display(Name = "Director's Movies")]
+        public string Movies => string.Join("<br>", Record.Movies.Select(m => m.Name));
     }
 }

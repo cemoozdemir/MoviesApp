@@ -8,7 +8,7 @@ namespace BLL.DAL
 
         [Required]
         [StringLength(50)]
-        public string UserName { get; set; }
+        public string Username { get; set; }
 
         [Required]
         [StringLength(50)]

@@ -3,47 +3,47 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using BLL.Controllers.Bases;
 using BLL.Services;
 using BLL.Models;
-using BLL.DAL;
 using BLL.Services.Bases;
+using BLL.DAL;
 
 // Generated from Custom Template.
 
 namespace MVC.Controllers
 {
-    public class GenresController : MvcController
+    public class RolesController : MvcController
     {
         // Service injections:
-        private readonly IService<Genres, GenresModel> _genresService;
+        private readonly IService<Role, RoleModel> _roleService;
 
         /* Can be uncommented and used for many to many relationships. ManyToManyRecord may be replaced with the related entiy name in the controller and views. */
         //private readonly IManyToManyRecordService _ManyToManyRecordService;
 
-        public GenresController(
-			IService<Genres, GenresModel> genresService
+        public RolesController(
+            IService<Role, RoleModel> roleService
 
-            /* Can be uncommented and used for many to many relationships. ManyToManyRecord may be replaced with the related entiy name in the controller and views. */
-            //, IManyToManyRecordService ManyToManyRecordService
+        /* Can be uncommented and used for many to many relationships. ManyToManyRecord may be replaced with the related entiy name in the controller and views. */
+        //, IManyToManyRecordService ManyToManyRecordService
         )
         {
-            _genresService = genresService;
+            _roleService = roleService;
 
             /* Can be uncommented and used for many to many relationships. ManyToManyRecord may be replaced with the related entiy name in the controller and views. */
             //_ManyToManyRecordService = ManyToManyRecordService;
         }
 
-        // GET: Genres
+        // GET: Roles
         public IActionResult Index()
         {
             // Get collection service logic:
-            var list = _genresService.Query().ToList();
+            var list = _roleService.Query().ToList();
             return View(list);
         }
 
-        // GET: Genres/Details/5
+        // GET: Roles/Details/5
         public IActionResult Details(int id)
         {
             // Get item service logic:
-            var item = _genresService.Query().SingleOrDefault(q => q.Record.Id == id);
+            var item = _roleService.Query().SingleOrDefault(q => q.Record.Id == id);
             return View(item);
         }
 
@@ -55,77 +55,77 @@ namespace MVC.Controllers
             //ViewBag.ManyToManyRecordIds = new MultiSelectList(_ManyToManyRecordService.Query().ToList(), "Record.Id", "Name");
         }
 
-        // GET: Genres/Create
+        // GET: Roles/Create
         public IActionResult Create()
         {
             SetViewData();
             return View();
         }
 
-        // POST: Genres/Create
+        // POST: Roles/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(BLL.Models.GenresModel genres)
+        public IActionResult Create(RoleModel role)
         {
             if (ModelState.IsValid)
             {
                 // Insert item service logic:
-                var result = _genresService.Create(genres.Record);
+                var result = _roleService.Create(role.Record);
                 if (result.IsSuccessful)
                 {
                     TempData["Message"] = result.Message;
-                    return RedirectToAction(nameof(Details), new { id = genres.Record.Id });
+                    return RedirectToAction(nameof(Details), new { id = role.Record.Id });
                 }
                 ModelState.AddModelError("", result.Message);
             }
             SetViewData();
-            return View(genres);
+            return View(role);
         }
 
-        // GET: Genres/Edit/5
+        // GET: Roles/Edit/5
         public IActionResult Edit(int id)
         {
             // Get item to edit service logic:
-            var item = _genresService.Query().SingleOrDefault(q => q.Record.Id == id);
+            var item = _roleService.Query().SingleOrDefault(q => q.Record.Id == id);
             SetViewData();
             return View(item);
         }
 
-        // POST: Genres/Edit
+        // POST: Roles/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(BLL.Models.GenresModel genres)
+        public IActionResult Edit(RoleModel role)
         {
             if (ModelState.IsValid)
             {
                 // Update item service logic:
-                var result = _genresService.Update(genres.Record);
+                var result = _roleService.Update(role.Record);
                 if (result.IsSuccessful)
                 {
                     TempData["Message"] = result.Message;
-                    return RedirectToAction(nameof(Details), new { id = genres.Record.Id });
+                    return RedirectToAction(nameof(Details), new { id = role.Record.Id });
                 }
                 ModelState.AddModelError("", result.Message);
             }
             SetViewData();
-            return View(genres);
+            return View(role);
         }
 
-        // GET: Genres/Delete/5
+        // GET: Roles/Delete/5
         public IActionResult Delete(int id)
         {
             // Get item to delete service logic:
-            var item = _genresService.Query().SingleOrDefault(q => q.Record.Id == id);
+            var item = _roleService.Query().SingleOrDefault(q => q.Record.Id == id);
             return View(item);
         }
 
-        // POST: Genres/Delete
+        // POST: Roles/Delete
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
             // Delete item service logic:
-            var result = _genresService.Delete(id);
+            var result = _roleService.Delete(id);
             TempData["Message"] = result.Message;
             return RedirectToAction(nameof(Index));
         }

@@ -5,15 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BLL.Services
 {
-    public interface IGenresService
-    {
-        public IQueryable<GenresModel> Query();
-        public ServiceBase Create(Genres record);
-        public ServiceBase Update(Genres record);
-        public ServiceBase Delete(int id);
-    }
-
-    public class GenresService : ServiceBase, IGenresService
+    public class GenresService : ServiceBase, IService<Genres, GenresModel>
     {
         public GenresService(Db db) : base(db)
         {

@@ -15,6 +15,7 @@ namespace MVC.Controllers
         // Service injections:
         private readonly IService<Movie, MovieModel> _movieService;
         private readonly IService<Director, DirectorModel> _directorService;
+        private readonly IService<Genres, GenresModel> _genresService;
 
         /* Can be uncommented and used for many to many relationships. ManyToManyRecord may be replaced with the related entiy name in the controller and views. */
         //private readonly IManyToManyRecordService _ManyToManyRecordService;
@@ -22,6 +23,7 @@ namespace MVC.Controllers
         public MoviesController(
             IService<Movie, MovieModel> movieService
             , IService<Director, DirectorModel> directorService
+            , IService<Genres, GenresModel> genresService
 
             /* Can be uncommented and used for many to many relationships. ManyToManyRecord may be replaced with the related entiy name in the controller and views. */
             //, IManyToManyRecordService ManyToManyRecordService
@@ -29,6 +31,7 @@ namespace MVC.Controllers
         {
             _movieService = movieService;
             _directorService = directorService;
+            _genresService = genresService;
 
             /* Can be uncommented and used for many to many relationships. ManyToManyRecord may be replaced with the related entiy name in the controller and views. */
             //_ManyToManyRecordService = ManyToManyRecordService;
@@ -54,9 +57,9 @@ namespace MVC.Controllers
         {
             // Related items service logic to set ViewData (Record.Id and Name parameters may need to be changed in the SelectList constructor according to the model):
             ViewData["DirectorId"] = new SelectList(_directorService.Query().ToList(), "Record.Id", "Name");
-            
+
             /* Can be uncommented and used for many to many relationships. ManyToManyRecord may be replaced with the related entiy name in the controller and views. */
-            //ViewBag.ManyToManyRecordIds = new MultiSelectList(_ManyToManyRecordService.Query().ToList(), "Record.Id", "Name");
+            ViewBag.MovieGenre = new MultiSelectList(_genresService.Query().ToList(), "Record.Id", "Name");
         }
 
         // GET: Movies/Create
