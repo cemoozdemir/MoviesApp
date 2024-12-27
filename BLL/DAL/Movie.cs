@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BLL.DAL
 {
@@ -22,9 +23,11 @@ namespace BLL.DAL
         public int DirectorId { get; set; }
 
         //ForeignKey
+        [ForeignKey("DirectorId")]
         public Director Director { get; set; }
 
         // Navigation Property for MovieGenre (Many-to-Many with Genre)
-        public List<Genres> Genres { get; set; } = new List<Genres>();
+        [InverseProperty("Movie")]
+        public List<MovieGenre> MovieGenres { get; set; } = new List<MovieGenre>();
     }
 }

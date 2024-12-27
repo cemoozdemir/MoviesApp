@@ -5,11 +5,13 @@ using BLL.Services;
 using BLL.Models;
 using BLL.DAL;
 using BLL.Services.Bases;
+using Microsoft.AspNetCore.Authorization;
 
 // Generated from Custom Template.
 
 namespace MVC.Controllers
 {
+    [Authorize]
     public class GenresController : MvcController
     {
         // Service injections:
@@ -19,10 +21,10 @@ namespace MVC.Controllers
         //private readonly IManyToManyRecordService _ManyToManyRecordService;
 
         public GenresController(
-			IService<Genres, GenresModel> genresService
+            IService<Genres, GenresModel> genresService
 
-            /* Can be uncommented and used for many to many relationships. ManyToManyRecord may be replaced with the related entiy name in the controller and views. */
-            //, IManyToManyRecordService ManyToManyRecordService
+        /* Can be uncommented and used for many to many relationships. ManyToManyRecord may be replaced with the related entiy name in the controller and views. */
+        //, IManyToManyRecordService ManyToManyRecordService
         )
         {
             _genresService = genresService;
@@ -50,12 +52,13 @@ namespace MVC.Controllers
         protected void SetViewData()
         {
             // Related items service logic to set ViewData (Record.Id and Name parameters may need to be changed in the SelectList constructor according to the model):
-            
+
             /* Can be uncommented and used for many to many relationships. ManyToManyRecord may be replaced with the related entiy name in the controller and views. */
             //ViewBag.ManyToManyRecordIds = new MultiSelectList(_ManyToManyRecordService.Query().ToList(), "Record.Id", "Name");
         }
 
         // GET: Genres/Create
+        [Authorize(Roles = "admin")]
         public IActionResult Create()
         {
             SetViewData();
@@ -65,6 +68,7 @@ namespace MVC.Controllers
         // POST: Genres/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public IActionResult Create(BLL.Models.GenresModel genres)
         {
             if (ModelState.IsValid)
@@ -83,6 +87,7 @@ namespace MVC.Controllers
         }
 
         // GET: Genres/Edit/5
+        [Authorize(Roles = "admin")]
         public IActionResult Edit(int id)
         {
             // Get item to edit service logic:
@@ -94,6 +99,7 @@ namespace MVC.Controllers
         // POST: Genres/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public IActionResult Edit(BLL.Models.GenresModel genres)
         {
             if (ModelState.IsValid)
@@ -112,6 +118,7 @@ namespace MVC.Controllers
         }
 
         // GET: Genres/Delete/5
+        [Authorize(Roles = "admin")]
         public IActionResult Delete(int id)
         {
             // Get item to delete service logic:
@@ -122,6 +129,7 @@ namespace MVC.Controllers
         // POST: Genres/Delete
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public IActionResult DeleteConfirmed(int id)
         {
             // Delete item service logic:

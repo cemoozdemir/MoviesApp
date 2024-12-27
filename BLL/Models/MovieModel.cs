@@ -20,13 +20,13 @@ namespace BLL.Models
         public string Director => $"{Record.Director?.Name} {Record.Director?.Surname}";
 
         [Display(Name = "Genres")]
-        public string MovieGenres => string.Join("<br>", Record.Genres?.Select(g => g.Genre?.Name));
+        public string MovieGenres => string.Join("<br>", Record.MovieGenres?.Select(g => g.Genres?.Name));
 
         [Display(Name = "Movie Genres")]
         public List<int> GenreIds
         {
-            get => Record.Genres?.Select(g => g.Id).ToList();
-            set => Record.Genres = value.Select(id => new Genres { Id = id }).ToList();
+            get => Record.MovieGenres?.Select(mg => mg.GenreId).ToList();
+            set => Record.MovieGenres = value.Select(id => new MovieGenre() { GenreId = id }).ToList();
 
         }
     }

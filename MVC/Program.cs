@@ -2,6 +2,7 @@ using BLL.DAL;
 using BLL.Models;
 using BLL.Services;
 using BLL.Services.Bases;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,9 +18,22 @@ appSettingsSection.Bind(new AppSettings());
 var connectionString = builder.Configuration.GetConnectionString("Db");
 builder.Services.AddDbContext<Db>(options => options.UseSqlServer(connectionString));
 builder.Services.AddScoped<IService<Genres, GenresModel>, GenresService>();
+
 builder.Services.AddScoped<IService<Movie, MovieModel>, MovieService>();
+
 builder.Services.AddScoped<IService<Director, DirectorModel>, DirectorService>();
+
 builder.Services.AddScoped<IService<User, UserModel>, UserService>();
+
+//Authentication
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Users/Login";
+        options.AccessDeniedPath = "/Users/Login";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+        options.SlidingExpiration = true;
+    });
 
 
 var app = builder.Build();
@@ -37,6 +51,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+//Authentication
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

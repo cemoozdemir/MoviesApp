@@ -13,7 +13,13 @@ namespace BLL.Services
 
         public IQueryable<MovieModel> Query()
         {
-            return _db.Movies.Include(m => m.Director).OrderByDescending( m => m.Name).ThenBy(m => m.TotalRevenue).Select(m => new MovieModel() { Record = m});
+            //return _db.Movies.Include(m => m.Director).OrderByDescending( m => m.Name).ThenBy(m => m.TotalRevenue).Select(m => new MovieModel() { Record = m});
+            return _db.Movies
+                .Include(m => m.Director)
+                .Include(m => m.MovieGenres)
+                .ThenInclude(mg => mg.Genres)
+                .OrderBy(m => m.Name)
+                .Select(m => new MovieModel { Record = m });
         }
 
         public ServiceBase Create(Movie record)
@@ -40,14 +46,15 @@ namespace BLL.Services
         {
             if(_db.Movies.Any(m => m.Name.ToLower() == record.Name.ToLower().Trim() && m.Id != record.Id))
                 return Error("Movie already exists.");
-            var entity = _db.Movies.SingleOrDefault(m => m.Id == record.Id);
+            var entity = _db.Movies.Include(m => m.MovieGenres).SingleOrDefault(m => m.Id == record.Id);
             if (entity == null)
                 return Error("Movie not found.");
+            _db.MovieGenres.RemoveRange(entity.MovieGenres);
             entity.Name = record.Name?.Trim();
             entity.ReleaseDate = record.ReleaseDate;
             entity.TotalRevenue = record.TotalRevenue;
             entity.DirectorId = record.DirectorId;
-            entity.Genres = record.Genres;
+            entity.MovieGenres = record.MovieGenres;
             _db.Movies.Update(entity);
             _db.SaveChanges();
             return Success("Movie updated.");

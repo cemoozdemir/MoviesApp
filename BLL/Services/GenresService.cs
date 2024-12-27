@@ -13,7 +13,7 @@ namespace BLL.Services
 
         public IQueryable<GenresModel> Query()
         {
-            return _db.Genres.OrderBy(g => g.Name).Select(g => new BLL.Models.GenresModel() { Record = g });
+            return _db.Genres.OrderBy(g => g.Name).Select(g => new GenresModel() { Record = g });
         }
 
         public ServiceBase Create(Genres record)
@@ -40,10 +40,10 @@ namespace BLL.Services
 
         public ServiceBase Delete(int id)
         {
-            var entity = _db.Genres.Include(g => g.Movies).SingleOrDefault(g => g.Id == id);
+            var entity = _db.Genres.Include(g => g.MovieGenres).SingleOrDefault(g => g.Id == id);
             if (entity == null)
                 return Error("Genre not found.");
-            if (entity.Movies.Any())
+            if (entity.MovieGenres.Any())
                 return Error("Genre is in use.");
             _db.Genres.Remove(entity);
             _db.SaveChanges();

@@ -4,6 +4,7 @@ using BLL.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BLL.Migrations
 {
     [DbContext(typeof(Db))]
-    partial class DbModelSnapshot : ModelSnapshot
+    [Migration("20241226234523_v1.1")]
+    partial class v11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,6 +80,9 @@ namespace BLL.Migrations
                     b.Property<int>("DirectorId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("GenresId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -92,6 +98,8 @@ namespace BLL.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DirectorId");
+
+                    b.HasIndex("GenresId");
 
                     b.ToTable("Movies");
                 });
@@ -176,13 +184,17 @@ namespace BLL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("BLL.DAL.Genres", null)
+                        .WithMany("Movies")
+                        .HasForeignKey("GenresId");
+
                     b.Navigation("Director");
                 });
 
             modelBuilder.Entity("BLL.DAL.MovieGenre", b =>
                 {
-                    b.HasOne("BLL.DAL.Genres", "Genres")
-                        .WithMany("MovieGenres")
+                    b.HasOne("BLL.DAL.Genres", "Genre")
+                        .WithMany()
                         .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -193,7 +205,7 @@ namespace BLL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Genres");
+                    b.Navigation("Genre");
 
                     b.Navigation("Movie");
                 });
@@ -216,7 +228,7 @@ namespace BLL.Migrations
 
             modelBuilder.Entity("BLL.DAL.Genres", b =>
                 {
-                    b.Navigation("MovieGenres");
+                    b.Navigation("Movies");
                 });
 
             modelBuilder.Entity("BLL.DAL.Movie", b =>

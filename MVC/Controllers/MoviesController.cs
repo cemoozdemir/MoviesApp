@@ -5,24 +5,28 @@ using BLL.Services;
 using BLL.Models;
 using BLL.DAL;
 using BLL.Services.Bases;
+using Microsoft.AspNetCore.Authorization;
 
 // Generated from Custom Template.
 
 namespace MVC.Controllers
 {
+    [Authorize]
     public class MoviesController : MvcController
     {
         // Service injections:
         private readonly IService<Movie, MovieModel> _movieService;
         private readonly IService<Director, DirectorModel> _directorService;
+        // Many to many relationships service injections:
         private readonly IService<Genres, GenresModel> _genresService;
 
         /* Can be uncommented and used for many to many relationships. ManyToManyRecord may be replaced with the related entiy name in the controller and views. */
-        //private readonly IManyToManyRecordService _ManyToManyRecordService;
+        //private readonly IService _ManyToManyRecordService;
 
         public MoviesController(
             IService<Movie, MovieModel> movieService
             , IService<Director, DirectorModel> directorService
+            // Many to many relationships service injections:
             , IService<Genres, GenresModel> genresService
 
             /* Can be uncommented and used for many to many relationships. ManyToManyRecord may be replaced with the related entiy name in the controller and views. */
@@ -31,6 +35,7 @@ namespace MVC.Controllers
         {
             _movieService = movieService;
             _directorService = directorService;
+            // Many to many relationships service injections:
             _genresService = genresService;
 
             /* Can be uncommented and used for many to many relationships. ManyToManyRecord may be replaced with the related entiy name in the controller and views. */
@@ -38,6 +43,7 @@ namespace MVC.Controllers
         }
 
         // GET: Movies
+        [AllowAnonymous]
         public IActionResult Index()
         {
             // Get collection service logic:
@@ -46,6 +52,7 @@ namespace MVC.Controllers
         }
 
         // GET: Movies/Details/5
+        [AllowAnonymous]
         public IActionResult Details(int id)
         {
             // Get item service logic:
@@ -59,10 +66,11 @@ namespace MVC.Controllers
             ViewData["DirectorId"] = new SelectList(_directorService.Query().ToList(), "Record.Id", "Name");
 
             /* Can be uncommented and used for many to many relationships. ManyToManyRecord may be replaced with the related entiy name in the controller and views. */
-            ViewBag.MovieGenre = new MultiSelectList(_genresService.Query().ToList(), "Record.Id", "Name");
+            ViewBag.GenreIds = new MultiSelectList(_genresService.Query().ToList(), "Record.Id", "Name");
         }
 
         // GET: Movies/Create
+        [Authorize(Roles = "admin")]
         public IActionResult Create()
         {
             SetViewData();
@@ -72,6 +80,7 @@ namespace MVC.Controllers
         // POST: Movies/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public IActionResult Create(MovieModel movie)
         {
             if (ModelState.IsValid)
@@ -90,6 +99,7 @@ namespace MVC.Controllers
         }
 
         // GET: Movies/Edit/5
+        [Authorize(Roles = "admin")]
         public IActionResult Edit(int id)
         {
             // Get item to edit service logic:
@@ -101,6 +111,7 @@ namespace MVC.Controllers
         // POST: Movies/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public IActionResult Edit(MovieModel movie)
         {
             if (ModelState.IsValid)
@@ -119,6 +130,7 @@ namespace MVC.Controllers
         }
 
         // GET: Movies/Delete/5
+        [Authorize(Roles = "admin")]
         public IActionResult Delete(int id)
         {
             // Get item to delete service logic:
@@ -129,6 +141,7 @@ namespace MVC.Controllers
         // POST: Movies/Delete
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public IActionResult DeleteConfirmed(int id)
         {
             // Delete item service logic:

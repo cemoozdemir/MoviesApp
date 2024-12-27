@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BLL.DAL
 {
@@ -10,6 +11,7 @@ namespace BLL.DAL
         [StringLength(50)]
         public string Name { get; set; }
 
-        public List<Movie> Movies { get; set; } = new List<Movie>();
+        [InverseProperty("Genres")]
+        public List<MovieGenre> MovieGenres { get; set; } = new List<MovieGenre>();
     }
 }
